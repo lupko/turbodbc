@@ -82,6 +82,26 @@ jobs:
     - ODBC_DIR=odbc
     - TURBODBC_ARROW_VERSION=0.17.1
   - os: linux
+    name: CPython3.8 Arrow 1.0.1
+    dist: xenial
+    language: python
+    addons:
+      apt:
+        packages:
+          - unixodbc
+          - unixodbc-dev
+          - odbc-postgresql
+    services:
+      - docker
+      - postgresql
+      - mysql
+    python: "3.8"
+    env:
+    - TURBODBC_USE_CONDA=yes
+    - TURBODBC_TEST_CONFIGURATION_FILES="query_fixtures_postgresql.json,query_fixtures_mssql.json"
+    - ODBC_DIR=odbc
+    - TURBODBC_ARROW_VERSION=1.0.1
+  - os: linux
     name: CPython3.8 Arrow Nightlies
     dist: xenial
     language: python
@@ -248,8 +268,8 @@ script:
   - cd gcov
   - gcov -l -p `find ../build -name "*.gcda"` > /dev/null
   - echo "Removing coverage for boost and C++ standard library"
-  - find . -name "*#boost#*" | xargs rm
-  - find . -name "*#c++#*" | xargs rm
+  - (find . -name "*#boost#*" | xargs rm) || echo "error while removing boost files"
+  - (find . -name "*#c++#*" | xargs rm) || echo "error while removing stdlib files"
   - cd ..
   - cd python/turbodbc_test/
   - echo "Uploading Python coverage"
