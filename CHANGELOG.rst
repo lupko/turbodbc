@@ -3,6 +3,16 @@ Version history / changelog
 
 From version 2.0.0, turbodbc adapts semantic versioning.
 
+Version 4.1.2
+-------------
+
+* Update package requirements so pyarrow<2.0 can be used.
+
+Version 4.1.1
+-------------
+
+* Version bump as package version was not adapted.
+
 Version 4.1.0
 -------------
 
