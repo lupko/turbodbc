@@ -57,7 +57,7 @@ jobs:
           functionalities: coveragepy, gcov
 
       - name: Publish package
-        if: matrix.upload && env.IS_MASTER_BUILD == 'true' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && github.repository == 'blue-yonder/turbodbc'
+        if: matrix.upload && github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && github.repository == 'blue-yonder/turbodbc'
 
         uses: pypa/gh-action-pypi-publish@master
         with:
