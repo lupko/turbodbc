@@ -177,6 +177,24 @@ test-python3.8-arrow3.x.x:
 
     SAVE ARTIFACT /result AS LOCAL result
 
+test-python3.9-arrow2.x.x:
+    ARG PYTHON_VERSION="3.9.1"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=2,<3" \
+        --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.9-arrow3.x.x:
+    ARG PYTHON_VERSION="3.9.1"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=3,<3.1" \
+        --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
 
 test-python3.8-arrow-nightly:
     ARG PYTHON_VERSION="3.8.5"
