@@ -20,6 +20,8 @@ jobs:
           - +test-python3.8-arrow0.x.x
           - +test-python3.8-arrow1.x.x
           - +test-python3.8-arrow2.x.x
+          - +test-python3.9-arrow2.x.x
+          - +test-python3.9-arrow3.x.x
         experimental: [ false ]
         upload: [ false ]
         include:
