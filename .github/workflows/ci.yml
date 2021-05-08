@@ -18,7 +18,6 @@ jobs:
     strategy:
       matrix:
         target:
-          - +test-python3.6
           - +test-python3.8-arrow0.x.x
           - +test-python3.8-arrow1.x.x
           - +test-python3.8-arrow2.x.x
