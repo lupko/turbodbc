@@ -3,10 +3,16 @@ Version history / changelog
 
 From version 2.0.0, turbodbc adapts semantic versioning.
 
+Version 4.2.0
+-------------
+
+* Update package requirements so that ``pyarrow>0.17.1,<4.1`` can be used.
+* Set minimal Python version to 3.7 following NEP 29.
+
 Version 4.1.2
 -------------
 
-* Update package requirements so pyarrow>0.17.1,<3.1 can be used.
+* Update package requirements so ``pyarrow>0.17.1,<3.1`` can be used.
 
 Version 4.1.1
 -------------
