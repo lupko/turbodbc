@@ -100,6 +100,9 @@ python_parameter_info determine_parameter_type(pybind11::handle const & value, t
     }
 
     auto ptr = value.ptr();
+    if (!PyDateTimeAPI) {
+        PyDateTime_IMPORT;
+    }
     if (PyDateTime_Check(ptr)) {
         return {set_timestamp, type_code::timestamp, size_not_important};
     }
