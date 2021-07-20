@@ -1,5 +1,7 @@
 #include <pybind11/pybind11.h>
 
+#include <datetime.h> // Python header
+
 namespace turbodbc { namespace bindings {
 
     void for_buffer_size(pybind11::module &);
@@ -19,6 +21,9 @@ using namespace turbodbc;
 
 PYBIND11_MODULE(turbodbc_intern, module)
 {
+    // determine_parameter_type relies on PyDateTimeAPI
+    PyDateTime_IMPORT;
+
     module.doc() = "Native helpers for the turbodbc package";
     bindings::for_buffer_size(module);
     bindings::for_column_info(module);

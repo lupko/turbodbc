@@ -9,15 +9,6 @@ namespace turbodbc {
 
 namespace {
 
-    struct datetime_initializer {
-        datetime_initializer()
-        {
-            PyDateTime_IMPORT;
-        }
-    };
-
-    static const datetime_initializer required_for_datetime_interaction;
-
     std::size_t const size_not_important = 0;
 
     void set_integer(pybind11::handle const & value, cpp_odbc::writable_buffer_element & destination)
