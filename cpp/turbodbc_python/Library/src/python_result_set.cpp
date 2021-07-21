@@ -58,14 +58,14 @@ namespace {
 
 }
 
+void python_result_set_init() {
+    PyDateTime_IMPORT;
+}
 
 python_result_set::python_result_set(result_set & base) :
     row_based_(base),
     columns_(row_based_.get_column_info())
 {
-    if(!PyDateTimeAPI) {
-        PyDateTime_IMPORT;
-    }
 }
 
 std::vector<column_info> python_result_set::get_column_info() const

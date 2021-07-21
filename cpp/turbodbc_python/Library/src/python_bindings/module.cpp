@@ -12,13 +12,21 @@ namespace turbodbc { namespace bindings {
     void for_python_result_set(pybind11::module &);
     void for_python_parameter_set(pybind11::module &);
 
-} }
+}
+namespace result_sets {
+    void python_result_set_init();
+}
+    void determine_parameter_type_init();
+}
 
 
 using namespace turbodbc;
 
 PYBIND11_MODULE(turbodbc_intern, module)
 {
+    result_sets::python_result_set_init();
+    determine_parameter_type_init();
+
     module.doc() = "Native helpers for the turbodbc package";
     bindings::for_buffer_size(module);
     bindings::for_column_info(module);
