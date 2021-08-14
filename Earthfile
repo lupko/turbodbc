@@ -130,17 +130,6 @@ test:
     SAVE ARTIFACT ../gcov /result/cov/cpp
     SAVE ARTIFACT /src/build/dist/dist /result/dist
 
-test-python3.6:
-    ARG PYTHON_VERSION="3.6.12"
-    ARG ARROW_VERSION_RULE="<2.0.0"
-
-    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
-        --build-arg ARROW_VERSION_RULE="<2.0.0" \
-        --build-arg NUMPY_VERSION_RULE="<1.20.0" \
-        +test/result /result
-
-    SAVE ARTIFACT /result AS LOCAL result
-
 test-python3.8-arrow0.x.x:
     ARG PYTHON_VERSION="3.8.5"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
@@ -286,7 +275,6 @@ test-python3.9-all:
     BUILD test-python3.9-arrow-nightly
 
 test-all:
-    BUILD +test-python3.6
     BUILD +test-python3.8-all
     BUILD +test-python3.9-all
 
