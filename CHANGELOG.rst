@@ -3,6 +3,11 @@ Version history / changelog
 
 From version 2.0.0, turbodbc adapts semantic versioning.
 
+Version 4.2.2
+-------------
+
+* Update package requirements so that ``pyarrow>0.17.1,<6.1`` can be used.
+
 Version 4.2.1
 -------------
 
