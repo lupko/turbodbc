@@ -259,7 +259,7 @@ test-python3.9-arrow5.x.x:
 test-python3.9-arrow6.x.x:
     ARG PYTHON_VERSION="3.9.7"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
-        --build-arg ARROW_VERSION_RULE=">=7,<7" \
+        --build-arg ARROW_VERSION_RULE=">=6,<7" \
         --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
         +test/result /result
 
