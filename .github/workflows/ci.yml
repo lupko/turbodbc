@@ -32,6 +32,13 @@ jobs:
           - +test-python3.9-arrow4.x.x
           - +test-python3.9-arrow5.x.x
           - +test-python3.9-arrow6.x.x
+          - +test-python3.10-arrow0.x.x
+          - +test-python3.10-arrow1.x.x
+          - +test-python3.10-arrow2.x.x
+          - +test-python3.10-arrow3.x.x
+          - +test-python3.10-arrow4.x.x
+          - +test-python3.10-arrow5.x.x
+          - +test-python3.10-arrow6.x.x
         experimental: [ false ]
         upload: [ false ]
         include:
@@ -41,10 +48,16 @@ jobs:
           - target: +test-python3.9-arrow6.x.x
             experimental: false
             upload: true
+          - target: +test-python3.10-arrow6.x.x
+            experimental: false
+            upload: true
           - target: +test-python3.8-arrow-nightly
             experimental: true
             upload: false
           - target: +test-python3.9-arrow-nightly
+            experimental: true
+            upload: false
+          - target: +test-python3.10-arrow-nightly
             experimental: true
             upload: false
     steps:
