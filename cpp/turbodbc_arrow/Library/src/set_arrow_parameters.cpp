@@ -423,10 +423,7 @@ namespace {
 }
 
 std::shared_ptr<Table> unwrap_pyarrow_table(pybind11::object const & pyarrow_table) {
-    std::shared_ptr<Table> table;
-    if (not arrow::py::unwrap_table(pyarrow_table.ptr(), &table).ok()) {
-      throw turbodbc::interface_error("Could not unwrap the C++ object from Python pyarrow.Table");
-    }
+    std::shared_ptr<Table> table = arrow::py::unwrap_table(pyarrow_table.ptr()).ValueOrDie();
     return table;
 }
 
