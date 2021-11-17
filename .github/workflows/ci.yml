@@ -32,7 +32,6 @@ jobs:
           - +test-python3.9-arrow4.x.x
           - +test-python3.9-arrow5.x.x
           - +test-python3.9-arrow6.x.x
-          - +test-python3.10-arrow0.x.x
           - +test-python3.10-arrow1.x.x
           - +test-python3.10-arrow2.x.x
           - +test-python3.10-arrow3.x.x
