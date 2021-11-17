@@ -62,8 +62,8 @@ python:
     RUN echo 'export UNIXODBC_INCLUDE_DIR=$CONDA_PREFIX/include' >> ~/.bashrc
 
     RUN cd /opt && \
-        wget -q https://github.com/pybind/pybind11/archive/v2.6.2.tar.gz && \
-        tar xvf v2.6.2.tar.gz
+        wget -q https://github.com/pybind/pybind11/archive/v2.8.1.tar.gz && \
+        tar xvf v2.8.1.tar.gz
 
 build:
     ARG PYTHON_VERSION=3.8.12
@@ -83,7 +83,7 @@ build:
 
     ENV ODBCSYSINI=/src/earthly/odbc
     ENV TURBODBC_TEST_CONFIGURATION_FILES="query_fixtures_postgresql.json,query_fixtures_mssql.json,query_fixtures_mysql.json"
-    RUN ln -s /opt/pybind11-2.6.2 /src/pybind11
+    RUN ln -s /opt/pybind11-2.8.1 /src/pybind11
 
     RUN bash -ic " \
         cmake -DBOOST_ROOT=\${CONDA_PREFIX} -DBUILD_COVERAGE=ON \
