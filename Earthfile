@@ -274,6 +274,69 @@ test-python3.9-arrow-nightly:
 
     SAVE ARTIFACT /result AS LOCAL result/$EARTHLY_TARGET_NAME
 
+test-python3.10-arrow1.x.x:
+    ARG PYTHON_VERSION="3.10.0"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=1,<2" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.10-arrow2.x.x:
+    ARG PYTHON_VERSION="3.10.0"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=2,<3" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.10-arrow3.x.x:
+    ARG PYTHON_VERSION="3.10.0"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=3,<4" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.10-arrow4.x.x:
+    ARG PYTHON_VERSION="3.10.0"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=4,<5" \
+        --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.10-arrow5.x.x:
+    ARG PYTHON_VERSION="3.10.0"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=5,<6" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.10-arrow6.x.x:
+    ARG PYTHON_VERSION="3.10.0"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=6,<7" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.10-arrow-nightly:
+    ARG PYTHON_VERSION="3.10.0"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        --build-arg CONDA_EXTRA="-c arrow-nightlies" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result/$EARTHLY_TARGET_NAME
+    
 test-python3.8-all:
     BUILD test-python3.8-arrow0.x.x
     BUILD test-python3.8-arrow1.x.x
@@ -293,10 +356,20 @@ test-python3.9-all:
     BUILD test-python3.9-arrow5.x.x
     BUILD test-python3.9-arrow6.x.x
     BUILD test-python3.9-arrow-nightly
+    
+test-python3.10-all:
+    BUILD test-python3.10-arrow1.x.x
+    BUILD test-python3.10-arrow2.x.x
+    BUILD test-python3.10-arrow3.x.x
+    BUILD test-python3.10-arrow4.x.x
+    BUILD test-python3.10-arrow5.x.x
+    BUILD test-python3.10-arrow6.x.x
+    BUILD test-python3.10-arrow-nightly
 
 test-all:
     BUILD +test-python3.8-all
     BUILD +test-python3.9-all
+    BUILD +test-python3.10-all
 
 docker:
     ARG PYTHON_VERSION=3.8.12
