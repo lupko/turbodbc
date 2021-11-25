@@ -205,7 +205,7 @@ with open(os.path.join(here, 'README.md')) as f:
 
 
 setup(name = 'turbodbc',
-      version = '4.2.2',
+      version = '4.3.0',
       description = 'turbodbc is a Python DB API 2.0 compatible ODBC driver',
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -228,6 +228,7 @@ setup(name = 'turbodbc',
                      'Programming Language :: Python :: 3.7',
                      'Programming Language :: Python :: 3.8',
                      'Programming Language :: Python :: 3.9',
+                     'Programming Language :: Python :: 3.10',
                      'Programming Language :: Python :: Implementation :: CPython',
                      'Topic :: Database'],
       ext_modules = get_extension_modules(),
