@@ -173,8 +173,8 @@ do the following:
 
     ::
 
-        wget -q https://github.com/pybind/pybind11/archive/v2.6.2.tar.gz
-        tar xvf v2.6.2.tar.gz
+        wget -q https://github.com/pybind/pybind11/archive/v2.8.1.tar.gz
+        tar xvf v2.8.1.tar.gz
 
 #.  Create a build directory somewhere and ``cd`` into it.
 

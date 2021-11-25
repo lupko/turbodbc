@@ -62,8 +62,8 @@ python:
     RUN echo 'export UNIXODBC_INCLUDE_DIR=$CONDA_PREFIX/include' >> ~/.bashrc
 
     RUN cd /opt && \
-        wget -q https://github.com/pybind/pybind11/archive/v2.6.2.tar.gz && \
-        tar xvf v2.6.2.tar.gz
+        wget -q https://github.com/pybind/pybind11/archive/v2.8.1.tar.gz && \
+        tar xvf v2.8.1.tar.gz
 
 build:
     ARG PYTHON_VERSION=3.8.12
@@ -83,7 +83,7 @@ build:
 
     ENV ODBCSYSINI=/src/earthly/odbc
     ENV TURBODBC_TEST_CONFIGURATION_FILES="query_fixtures_postgresql.json,query_fixtures_mssql.json,query_fixtures_mysql.json"
-    RUN ln -s /opt/pybind11-2.6.2 /src/pybind11
+    RUN ln -s /opt/pybind11-2.8.1 /src/pybind11
 
     RUN bash -ic " \
         cmake -DBOOST_ROOT=\${CONDA_PREFIX} -DBUILD_COVERAGE=ON \
@@ -278,7 +278,7 @@ test-python3.10-arrow1.x.x:
     ARG PYTHON_VERSION="3.10.0"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
         --build-arg ARROW_VERSION_RULE=">=1,<2" \
-        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.4" \
         +test/result /result
 
     SAVE ARTIFACT /result AS LOCAL result
@@ -287,7 +287,7 @@ test-python3.10-arrow2.x.x:
     ARG PYTHON_VERSION="3.10.0"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
         --build-arg ARROW_VERSION_RULE=">=2,<3" \
-        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.4" \
         +test/result /result
 
     SAVE ARTIFACT /result AS LOCAL result
@@ -296,7 +296,7 @@ test-python3.10-arrow3.x.x:
     ARG PYTHON_VERSION="3.10.0"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
         --build-arg ARROW_VERSION_RULE=">=3,<4" \
-        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.4" \
         +test/result /result
 
     SAVE ARTIFACT /result AS LOCAL result
@@ -305,7 +305,7 @@ test-python3.10-arrow4.x.x:
     ARG PYTHON_VERSION="3.10.0"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
         --build-arg ARROW_VERSION_RULE=">=4,<5" \
-        --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.4" \
         +test/result /result
 
     SAVE ARTIFACT /result AS LOCAL result
@@ -314,7 +314,7 @@ test-python3.10-arrow5.x.x:
     ARG PYTHON_VERSION="3.10.0"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
         --build-arg ARROW_VERSION_RULE=">=5,<6" \
-        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.4" \
         +test/result /result
 
     SAVE ARTIFACT /result AS LOCAL result
@@ -331,7 +331,7 @@ test-python3.10-arrow6.x.x:
 test-python3.10-arrow-nightly:
     ARG PYTHON_VERSION="3.10.0"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
-        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.4" \
         --build-arg CONDA_EXTRA="-c arrow-nightlies" \
         +test/result /result
 

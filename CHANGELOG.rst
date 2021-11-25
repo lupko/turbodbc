@@ -7,11 +7,8 @@ Version 4.3.0
 -------------
 
 * Add Python 3.10 build 
-
-Version 4.2.2
--------------
-
 * Update package requirements so that ``pyarrow>0.17.1,<6.1`` can be used.
+* Bump pybind11 version to 2.8.1
 
 Version 4.2.1
 -------------
