@@ -22,6 +22,10 @@ python_parameter_set::~python_parameter_set() = default;
 
 void python_parameter_set::flush()
 {
+	// release the GIL here because bound_parameter_set::execute_batch may perform
+	// a blocking ODBC call (statement::execute_prepared)
+	pybind11::gil_scoped_release release;
+
 	// bound result set handles empty parameter sets
 	parameters_.execute_batch(current_parameter_set_);
 	current_parameter_set_ = 0;
