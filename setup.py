@@ -214,7 +214,7 @@ setup(name = 'turbodbc',
       author='Michael Koenig',
       author_email = 'michael.koenig@blue-yonder.com',
       packages = ['turbodbc'],
-      python_requires'>=3.8',
+      python_requires='>=3.8',
       extras_require={
           'arrow': ['pyarrow>=1.0,<7.1.0'],
           'numpy': 'numpy>=1.19.0'
