@@ -185,9 +185,6 @@ class Cursor(object):
             import pyarrow as pa
 
             def _num_chunks(c):
-                if not isinstance(c, pa.ChunkedArray):
-                    # pyarrow < 0.15
-                    c = c.data
                 return c.num_chunks
 
             if isinstance(columns, pa.Table):

@@ -62,8 +62,8 @@ python:
     RUN echo 'export UNIXODBC_INCLUDE_DIR=$CONDA_PREFIX/include' >> ~/.bashrc
 
     RUN cd /opt && \
-        wget -q https://github.com/pybind/pybind11/archive/v2.8.1.tar.gz && \
-        tar xvf v2.8.1.tar.gz
+        wget -q https://github.com/pybind/pybind11/archive/v2.9.1.tar.gz && \
+        tar xvf v2.9.1.tar.gz
 
 build:
     ARG PYTHON_VERSION=3.8.12
@@ -83,7 +83,7 @@ build:
 
     ENV ODBCSYSINI=/src/earthly/odbc
     ENV TURBODBC_TEST_CONFIGURATION_FILES="query_fixtures_postgresql.json,query_fixtures_mssql.json,query_fixtures_mysql.json"
-    RUN ln -s /opt/pybind11-2.8.1 /src/pybind11
+    RUN ln -s /opt/pybind11-2.9.1 /src/pybind11
 
     RUN bash -ic " \
         cmake -DBOOST_ROOT=\${CONDA_PREFIX} -DBUILD_COVERAGE=ON \
@@ -129,15 +129,6 @@ test:
     SAVE ARTIFACT python_cov.xml /result/cov/python/python_cov.xml
     SAVE ARTIFACT ../gcov /result/cov/cpp
     SAVE ARTIFACT /src/build/dist/dist /result/dist
-
-test-python3.8-arrow0.x.x:
-    ARG PYTHON_VERSION="3.8.12"
-    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
-        --build-arg ARROW_VERSION_RULE="<1" \
-        --build-arg NUMPY_VERSION_RULE="<1.20.0" \
-        +test/result /result
-
-    SAVE ARTIFACT /result AS LOCAL result
 
 test-python3.8-arrow1.x.x:
     ARG PYTHON_VERSION="3.8.12"
@@ -211,15 +202,6 @@ test-python3.8-arrow-nightly:
         +test/result /result
 
     SAVE ARTIFACT /result AS LOCAL result/$EARTHLY_TARGET_NAME
-
-test-python3.9-arrow0.x.x:
-    ARG PYTHON_VERSION="3.9.10"
-    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
-        --build-arg ARROW_VERSION_RULE="<1" \
-        --build-arg NUMPY_VERSION_RULE="<1.20.0" \
-        +test/result /result
-
-    SAVE ARTIFACT /result AS LOCAL result
 
 test-python3.9-arrow1.x.x:
     ARG PYTHON_VERSION="3.9.10"
@@ -368,7 +350,6 @@ test-python3.10-arrow-nightly:
     SAVE ARTIFACT /result AS LOCAL result/$EARTHLY_TARGET_NAME
     
 test-python3.8-all:
-    BUILD test-python3.8-arrow0.x.x
     BUILD test-python3.8-arrow1.x.x
     BUILD test-python3.8-arrow2.x.x
     BUILD test-python3.8-arrow3.x.x
@@ -379,7 +360,6 @@ test-python3.8-all:
     BUILD test-python3.8-arrow-nightly
 
 test-python3.9-all:
-    BUILD test-python3.9-arrow0.x.x
     BUILD test-python3.9-arrow1.x.x
     BUILD test-python3.9-arrow2.x.x
     BUILD test-python3.9-arrow3.x.x

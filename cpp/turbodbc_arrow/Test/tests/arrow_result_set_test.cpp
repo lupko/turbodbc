@@ -6,14 +6,8 @@
 #undef BOOL
 #undef timezone
 #include <arrow/api.h>
-// ARROW_VERSION is defined from 0.13.0 on
-#ifdef ARROW_VERSION
-  #include <arrow/testing/gtest_util.h>
-  #include <arrow/testing/util.h>
-#else
-  #include <arrow/test-util.h>
-  #define ARROW_EXPECT_OK EXPECT_OK
-#endif
+#include <arrow/testing/gtest_util.h>
+#include <arrow/testing/util.h>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <sql.h>
@@ -106,11 +100,7 @@ class ArrowResultSetTest : public ::testing::Test {
         std::shared_ptr<arrow::Array> MakePrimitive(int64_t length, int64_t null_count = 0) {
             std::shared_ptr<arrow::ResizableBuffer> data;
             const int64_t data_nbytes = length * sizeof(typename ArrayType::value_type);
-#if ARROW_VERSION_MAJOR > 0 || ARROW_VERSION_MINOR >= 17
             data = *AllocateResizableBuffer(data_nbytes, pool);
-#else
-            ARROW_EXPECT_OK(AllocateResizableBuffer(pool, data_nbytes, &data));
-#endif
 
             // Fill with random data
             random_bytes(data_nbytes, 0 /*random_seed*/, data->mutable_data());
@@ -121,11 +111,7 @@ class ArrowResultSetTest : public ::testing::Test {
 #else
             const int64_t null_nbytes = arrow::BitUtil::BytesForBits(length);
 #endif
-#if ARROW_VERSION_MAJOR > 0 || ARROW_VERSION_MINOR >= 17
             null_bitmap = *AllocateResizableBuffer(null_nbytes, pool);
-#else
-            ARROW_EXPECT_OK(AllocateResizableBuffer(pool, null_nbytes, &null_bitmap));
-#endif
             memset(null_bitmap->mutable_data(), 255, null_nbytes);
             for (int64_t i = 0; i < null_count; i++) {
 #if ARROW_VERSION_MAJOR >= 7
