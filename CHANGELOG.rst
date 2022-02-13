@@ -8,7 +8,7 @@ Version 4.4.0
 
 * Bump pybind11 version to 2.9.1
 * Bump dependency requirements to ``pyarrow>=1.0`` and ``numpy>=1.19``
-* Bump the used earthly and google test versions to 0.6.7 and 1.11.0 resp.
+* Bump the used google test versions to 1.11.0
 
 Version 4.3.1
 -------------
