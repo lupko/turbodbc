@@ -20,8 +20,8 @@ Features
 *   Supported data types for both result sets and parameters:
     ``int``, ``float``, ``str``, ``bool``, ``datetime.date``, ``datetime.datetime``
 *   Also provides a high-level C++11 database driver under the hood
-*   Tested with Python 3.7, 3.8 and 3.9
-*   Tested on 64 bit versions of Linux, OSX, and Windows (Python 3.7+).
+*   Tested with Python 3.8, 3.9 and 3.10
+*   Tested on 64 bit versions of Linux, OSX, and Windows (Python 3.8+).
 
 
 Why should I use turbodbc instead of other ODBC modules?

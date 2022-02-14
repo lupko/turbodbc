@@ -3,6 +3,13 @@ Version history / changelog
 
 From version 2.0.0, turbodbc adapts semantic versioning.
 
+Version 4.4.0
+-------------
+
+* Bump pybind11 version to 2.9.1
+* Bump dependency requirements to ``pyarrow>=1.0`` and ``numpy>=1.19``
+* Bump the used google test versions to 1.11.0
+
 Version 4.3.1
 -------------
 
