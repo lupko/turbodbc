@@ -24,10 +24,10 @@ def test_options_with_overrides():
     assert options.read_buffer_size.rows == 123
     assert options.parameter_sets_to_buffer == 2500
     assert options.varchar_max_character_limit == 42
-    assert options.prefer_unicode == True
-    assert options.use_async_io == True
-    assert options.autocommit == True
-    assert options.large_decimals_as_64_bit_types == True
-    assert options.limit_varchar_results_to_max == True
-    assert options.force_extra_capacity_for_unicode == True
-    assert options.fetch_wchar_as_char == True
+    assert options.prefer_unicode is True
+    assert options.use_async_io is True
+    assert options.autocommit is True
+    assert options.large_decimals_as_64_bit_types is True
+    assert options.limit_varchar_results_to_max is True
+    assert options.force_extra_capacity_for_unicode is True
+    assert options.fetch_wchar_as_char is True

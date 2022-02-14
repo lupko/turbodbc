@@ -1,6 +1,5 @@
 import json
 from datetime import date, datetime
-from typing import Any
 
 import numpy
 import pyodbc

@@ -150,9 +150,9 @@ def test_autocommit_switching(dsn, configuration):
 @for_one_database
 def test_autocommit_querying(dsn, configuration):
     connection = connect(dsn, **get_credentials(configuration))
-    assert connection.autocommit == False
+    assert connection.autocommit is False
     connection.autocommit = True
-    assert connection.autocommit == True
+    assert connection.autocommit is True
     connection.close()
 
 

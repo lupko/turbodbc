@@ -25,7 +25,7 @@ def _test_single_row_result_set(configuration, query, expected_row):
         assert row == expected_row
 
         row = cursor.fetchone()
-        assert None == row
+        assert row is None
 
 
 @for_each_database
@@ -151,7 +151,7 @@ def test_fetchone(dsn, configuration):
             assert row == [44]
 
             row = cursor.fetchone()
-            assert None == row
+            assert row is None
 
 
 @for_each_database
@@ -262,7 +262,7 @@ def test_description(dsn, configuration):
     capabilities = configuration["capabilities"]
 
     with open_cursor(configuration) as cursor:
-        assert None == cursor.description
+        assert cursor.description is None
 
         def fix_case(string):
             if capabilities["reports_column_names_as_upper_case"]:

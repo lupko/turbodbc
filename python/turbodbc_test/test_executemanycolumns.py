@@ -15,11 +15,11 @@ column_backends = ["numpy"]
 
 try:
     import pyarrow as pa
-    import turbodbc_arrow_support
+    import turbodbc_arrow_support  # noqa: F401
 
     column_backends.append("arrow")
     # column_backends.append('pandas')
-except:
+except ImportError:
     pass
 
 for_each_column_backend = pytest.mark.parametrize("column_backend", column_backends)
