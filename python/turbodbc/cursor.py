@@ -18,7 +18,7 @@ _NO_ARROW_SUPPORT_MSG = (
 )
 
 
-def _has_numpy_support():
+def _has_numpy_support() -> bool:
     try:
         import turbodbc_numpy_support  # noqa: F401
 
@@ -27,7 +27,7 @@ def _has_numpy_support():
         return False
 
 
-def _has_arrow_support():
+def _has_arrow_support() -> bool:
     try:
         import turbodbc_arrow_support  # noqa: F401
 
@@ -184,7 +184,7 @@ class Cursor:
         return self._execute()
 
     @translate_exceptions
-    def executemanycolumns(self, sql, columns):
+    def executemanycolumns(self, sql: str, columns):
         """
         Execute an SQL command or query with multiple parameter sets that are passed in
         a column-wise fashion as opposed to the row-wise parameters in ``executemany()``.

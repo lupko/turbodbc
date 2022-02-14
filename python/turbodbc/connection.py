@@ -14,7 +14,7 @@ class Connection:
         self.cursors: WeakSet = WeakSet([])
 
     @translate_exceptions
-    def cursor(self):
+    def cursor(self) -> Cursor:
         """
         Create a new ``Cursor`` instance associated with this ``Connection``
 
