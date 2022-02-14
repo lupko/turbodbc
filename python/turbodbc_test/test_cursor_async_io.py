@@ -1,4 +1,3 @@
-import pytest
 from helpers import for_one_database, open_cursor
 from query_fixture import query_fixture
 

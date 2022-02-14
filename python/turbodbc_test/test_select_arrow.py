@@ -199,8 +199,6 @@ def test_arrow_date_column(dsn, configuration):
 @for_each_database
 @pyarrow
 def test_arrow_timelike_column_with_null(dsn, configuration):
-    fill_value = 0
-
     with open_cursor(configuration) as cursor:
         with query_fixture(cursor, configuration, "INSERT TIMESTAMP") as table_name:
             cursor.execute(f"INSERT INTO {table_name} VALUES (?)", [None])

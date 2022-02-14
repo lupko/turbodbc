@@ -20,7 +20,7 @@ _NO_ARROW_SUPPORT_MSG = (
 
 def _has_numpy_support():
     try:
-        import turbodbc_numpy_support
+        import turbodbc_numpy_support  # noqa: F401
 
         return True
     except ImportError:
@@ -29,7 +29,7 @@ def _has_numpy_support():
 
 def _has_arrow_support():
     try:
-        import turbodbc_arrow_support
+        import turbodbc_arrow_support  # noqa: F401
 
         return True
     except ImportError:
@@ -69,7 +69,7 @@ def _assert_numpy_column_preconditions(columns):
             raise InterfaceError(f"Column {index} of {n_columns} is not contiguous")
 
     lengths = [len(column) for column in columns]
-    all_same_length = all(l == lengths[0] for l in lengths)
+    all_same_length = all(length == lengths[0] for length in lengths)
     if not all_same_length:
         raise InterfaceError(
             f"All columns must have the same length, got lengths {lengths}"

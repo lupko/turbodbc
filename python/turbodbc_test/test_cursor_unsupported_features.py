@@ -4,7 +4,7 @@ from helpers import for_one_database, get_credentials
 from turbodbc import connect
 
 """
-Test optional features mentioned in PEP-249 "behave" as specified 
+Test optional features mentioned in PEP-249 "behave" as specified
 """
 
 

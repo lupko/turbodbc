@@ -15,9 +15,9 @@ numpy = pytest.mark.numpy
 @pytest.mark.numpy
 def test_has_numpy_support_fails():
     with patch("builtins.__import__", side_effect=ImportError):
-        assert _has_numpy_support() == False
+        assert not _has_numpy_support()
 
 
 @pytest.mark.numpy
 def test_has_numpy_support_succeeds():
-    assert _has_numpy_support() == True
+    assert _has_numpy_support()

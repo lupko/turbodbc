@@ -12,7 +12,7 @@ def test_new_cursor_properties(dsn, configuration):
 
     # https://www.python.org/dev/peps/pep-0249/#rowcount
     assert cursor.rowcount == -1
-    assert None == cursor.description
+    assert cursor.description is None
     assert cursor.arraysize == 1
 
 
@@ -144,7 +144,7 @@ def test_insert_duplicate_uniquecol_raises(dsn, configuration):
         with query_fixture(
             cursor, configuration, "INSERT DUPLICATE UNIQUECOL"
         ) as table_name:
-            with pytest.raises(DatabaseError) as ex:
+            with pytest.raises(DatabaseError):
                 cursor.execute(f"INSERT INTO {table_name} VALUES (1)")
                 # some databases (e.g. exasol) report failure not in the execute statement above, but only
                 # when closing the odbc handle, i.e. at cursor.close:

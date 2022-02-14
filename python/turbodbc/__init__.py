@@ -10,5 +10,27 @@ from .options import make_options
 
 try:
     __version__ = pkg_resources.get_distribution(__name__).version
-except:
+except:  # noqa: E722
     __version__ = "unknown"
+
+__all__ = [
+    "Megabytes",
+    "Rows",
+    "apilevel",
+    "paramstyle",
+    "threadsafety",
+    "connect",
+    "Date",
+    "Time",
+    "Timestamp",
+    "BINARY",
+    "DATETIME",
+    "NUMBER",
+    "ROWID",
+    "STRING",
+    "DatabaseError",
+    "Error",
+    "InterfaceError",
+    "ParameterError",
+    "make_options",
+]

@@ -11,10 +11,10 @@ from turbodbc import InterfaceError
 
 try:
     import pyarrow as pa
-    import turbodbc_arrow_support
+    import turbodbc_arrow_support  # noqa: F401
 
     HAVE_ARROW = True
-except:
+except ImportError:
     HAVE_ARROW = False
 
 
@@ -77,7 +77,7 @@ def test_column_with_non_contiguous_data_raises(dsn, configuration):
         with query_fixture(cursor, configuration, "INSERT INTEGER") as table_name:
             two_dimensional = array([[1, 2, 3], [4, 5, 6]], dtype="int64")
             one_dimensional = two_dimensional[:, 1]
-            assert one_dimensional.flags.c_contiguous == False
+            assert not one_dimensional.flags.c_contiguous
             columns = [one_dimensional]
             with pytest.raises(turbodbc.InterfaceError):
                 cursor.executemanycolumns(
