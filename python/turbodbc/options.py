@@ -1,15 +1,18 @@
 from turbodbc_intern import Options
 
-def make_options(read_buffer_size=None,
-                 parameter_sets_to_buffer=None,
-                 varchar_max_character_limit=None,
-                 prefer_unicode=None,
-                 use_async_io=None,
-                 autocommit=None,
-                 large_decimals_as_64_bit_types=None,
-                 limit_varchar_results_to_max=None,
-                 force_extra_capacity_for_unicode=None,
-                 fetch_wchar_as_char=None):
+
+def make_options(
+    read_buffer_size=None,
+    parameter_sets_to_buffer=None,
+    varchar_max_character_limit=None,
+    prefer_unicode=None,
+    use_async_io=None,
+    autocommit=None,
+    large_decimals_as_64_bit_types=None,
+    limit_varchar_results_to_max=None,
+    force_extra_capacity_for_unicode=None,
+    fetch_wchar_as_char=None,
+):
     """
     Create options that control how turbodbc interacts with a database. These
     options affect performance for the most part, but some options may require adjustment

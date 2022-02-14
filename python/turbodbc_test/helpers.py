@@ -1,14 +1,14 @@
-from contextlib import contextmanager
-
 import json
 import os
+from contextlib import contextmanager
+
 import pytest
 
 import turbodbc
 
 
 def generate_microseconds_with_precision(digits):
-    microseconds = 0;
+    microseconds = 0
     for i in range(digits):
         microseconds = 10 * microseconds + i + 1
     for i in range(6 - digits):
@@ -18,30 +18,41 @@ def generate_microseconds_with_precision(digits):
 
 
 def _get_config_files():
-    variable = 'TURBODBC_TEST_CONFIGURATION_FILES'
+    variable = "TURBODBC_TEST_CONFIGURATION_FILES"
     try:
         raw = os.environ[variable]
-        file_names = raw.split(',')
+        file_names = raw.split(",")
         return [file_name.strip() for file_name in file_names]
     except KeyError:
-        raise KeyError('Please set the environment variable {} to specify the configuration files as a comma-separated list'.format(variable))
+        raise KeyError(
+            "Please set the environment variable {} to specify the configuration files as a comma-separated list".format(
+                variable
+            )
+        )
 
 
 def get_credentials(configuration):
-    if 'user' in configuration:
-        return {configuration['capabilities']['connection_user_option']: configuration['user'],
-                configuration['capabilities']['connection_password_option']: configuration['password']}
+    if "user" in configuration:
+        return {
+            configuration["capabilities"]["connection_user_option"]: configuration[
+                "user"
+            ],
+            configuration["capabilities"]["connection_password_option"]: configuration[
+                "password"
+            ],
+        }
     else:
         return {}
 
+
 def _load_configuration(file_name):
-    with open(file_name, 'r') as f:
+    with open(file_name) as f:
         return json.load(f)
 
 
 def _get_configuration(file_name):
     conf = _load_configuration(file_name)
-    return (conf['data_source_name'], conf)
+    return (conf["data_source_name"], conf)
 
 
 def _get_configurations():
@@ -60,8 +71,7 @@ Example:
 def test_important_stuff(dsn, configuration):
     assert 1 == 2
 """
-for_each_database = pytest.mark.parametrize("dsn,configuration",
-                                            _get_configurations())
+for_each_database = pytest.mark.parametrize("dsn,configuration", _get_configurations())
 
 """
 Use this decorator to execute a test function once for each database configuration
@@ -76,11 +86,13 @@ Example:
 def test_important_stuff(dsn, configuration):
     assert 1 == 2
 """
+
+
 def for_each_database_except(exceptions):
     configurations = _get_configurations()
-    return pytest.mark.parametrize("dsn,configuration",
-                                   [c for c in configurations if c[0] not in exceptions])
-
+    return pytest.mark.parametrize(
+        "dsn,configuration", [c for c in configurations if c[0] not in exceptions]
+    )
 
 
 """
@@ -95,39 +107,42 @@ Example:
 def test_important_stuff(dsn, configuration):
     assert 1 == 2
 """
-for_one_database = pytest.mark.parametrize("dsn,configuration",
-                                           [_get_configuration(_get_config_files()[0])])
-
+for_one_database = pytest.mark.parametrize(
+    "dsn,configuration", [_get_configuration(_get_config_files()[0])]
+)
 
 
 @contextmanager
-def open_connection(configuration,
-                    rows_to_buffer=None,
-                    parameter_sets_to_buffer=100,
-                    **turbodbc_options):
-    dsn = configuration['data_source_name']
-    prefer_unicode = configuration.get('prefer_unicode', False)
-    read_buffer_size = turbodbc.Rows(rows_to_buffer) if rows_to_buffer else turbodbc.Megabytes(1)
+def open_connection(
+    configuration, rows_to_buffer=None, parameter_sets_to_buffer=100, **turbodbc_options
+):
+    dsn = configuration["data_source_name"]
+    prefer_unicode = configuration.get("prefer_unicode", False)
+    read_buffer_size = (
+        turbodbc.Rows(rows_to_buffer) if rows_to_buffer else turbodbc.Megabytes(1)
+    )
 
-    options = turbodbc.make_options(read_buffer_size=read_buffer_size,
-                                    parameter_sets_to_buffer=parameter_sets_to_buffer,
-                                    prefer_unicode=prefer_unicode,
-                                    **turbodbc_options)
-    connection = turbodbc.connect(dsn, turbodbc_options=options, **get_credentials(configuration))
+    options = turbodbc.make_options(
+        read_buffer_size=read_buffer_size,
+        parameter_sets_to_buffer=parameter_sets_to_buffer,
+        prefer_unicode=prefer_unicode,
+        **turbodbc_options,
+    )
+    connection = turbodbc.connect(
+        dsn, turbodbc_options=options, **get_credentials(configuration)
+    )
 
     yield connection
     connection.close()
 
 
 @contextmanager
-def open_cursor(configuration,
-                rows_to_buffer=None,
-                parameter_sets_to_buffer=100,
-                **turbodbc_options):
-    with open_connection(configuration,
-                         rows_to_buffer,
-                         parameter_sets_to_buffer,
-                         **turbodbc_options) as connection:
+def open_cursor(
+    configuration, rows_to_buffer=None, parameter_sets_to_buffer=100, **turbodbc_options
+):
+    with open_connection(
+        configuration, rows_to_buffer, parameter_sets_to_buffer, **turbodbc_options
+    ) as connection:
         cursor = connection.cursor()
         yield cursor
         cursor.close()

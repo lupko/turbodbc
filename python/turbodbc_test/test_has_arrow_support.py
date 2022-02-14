@@ -1,11 +1,11 @@
-from mock import patch
-
-from turbodbc.cursor import _has_arrow_support
+from unittest.mock import patch
 
 import pytest
 
+from turbodbc.cursor import _has_arrow_support
+
 # Skip all parquet tests if we can't import pyarrow.parquet
-pytest.importorskip('pyarrow')
+pytest.importorskip("pyarrow")
 
 # Ignore these with pytest ... -m 'not parquet'
 pyarrow = pytest.mark.pyarrow

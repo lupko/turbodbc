@@ -1,4 +1,5 @@
-from helpers import open_cursor, for_one_database
+from helpers import for_one_database, open_cursor
+
 
 @for_one_database
 def test_multiple_open_connections(dsn, configuration):

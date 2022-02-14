@@ -1,17 +1,22 @@
 import datetime
+
 import pytest
+from helpers import (
+    for_each_database,
+    for_each_database_except,
+    for_one_database,
+    open_cursor,
+)
+from query_fixture import query_fixture
 
 import turbodbc
-
-from query_fixture import query_fixture
-from helpers import open_cursor, for_each_database, for_one_database, for_each_database_except
 
 
 def _test_single_row_result_set(configuration, query, expected_row):
     with open_cursor(configuration) as cursor:
         cursor.execute(query)
 
-        if configuration["capabilities"]['supports_row_count']:
+        if configuration["capabilities"]["supports_row_count"]:
             assert cursor.rowcount == 1
         else:
             assert cursor.rowcount == -1
@@ -46,11 +51,11 @@ def test_select_single_row_integer_result(dsn, configuration):
 @for_each_database
 def test_select_single_row_bool_result(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT TRUE') as query:
+        with query_fixture(cursor, configuration, "SELECT TRUE") as query:
             cursor.execute(query)
             row = cursor.fetchone()
             assert row == [True]
-        with query_fixture(cursor, configuration, 'SELECT FALSE') as query:
+        with query_fixture(cursor, configuration, "SELECT FALSE") as query:
             cursor.execute(query)
             row = cursor.fetchone()
             assert row == [False]
@@ -64,16 +69,16 @@ def test_select_single_row_string_result(dsn, configuration):
 @for_each_database
 def test_select_single_row_unicode_result(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT UNICODE') as query:
+        with query_fixture(cursor, configuration, "SELECT UNICODE") as query:
             cursor.execute(query)
             row = cursor.fetchone()
-            assert row == [u'I \u2665 unicode']
+            assert row == ["I \u2665 unicode"]
 
 
 @for_each_database
 def test_select_single_row_double_result(configuration, dsn):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT DOUBLE') as query:
+        with query_fixture(cursor, configuration, "SELECT DOUBLE") as query:
             cursor.execute(query)
             row = cursor.fetchone()
             assert row == [3.14]
@@ -81,14 +86,17 @@ def test_select_single_row_double_result(configuration, dsn):
 
 @for_each_database
 def test_select_single_row_date_result(configuration, dsn):
-    _test_single_row_result_set(configuration,
-                                "SELECT CAST('2015-12-31' AS DATE) AS a",
-                                [datetime.date(2015, 12, 31)])
+    _test_single_row_result_set(
+        configuration,
+        "SELECT CAST('2015-12-31' AS DATE) AS a",
+        [datetime.date(2015, 12, 31)],
+    )
+
 
 @for_each_database
 def test_select_single_row_timestamp_result(configuration, dsn):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT TIMESTAMP') as query:
+        with query_fixture(cursor, configuration, "SELECT TIMESTAMP") as query:
             cursor.execute(query)
             row = cursor.fetchone()
             assert row == [datetime.datetime(2015, 12, 31, 1, 2, 3)]
@@ -96,15 +104,17 @@ def test_select_single_row_timestamp_result(configuration, dsn):
 
 @for_each_database
 def test_select_single_row_large_numeric_result_as_string(configuration, dsn):
-    _test_single_row_result_set(configuration,
-                                "SELECT -1234567890123.123456789",
-                                ['-1234567890123.123456789'])
+    _test_single_row_result_set(
+        configuration, "SELECT -1234567890123.123456789", ["-1234567890123.123456789"]
+    )
 
 
 @for_each_database
 def test_select_single_row_large_integer_decimal_as_64_bit_type(configuration, dsn):
     with open_cursor(configuration, large_decimals_as_64_bit_types=True) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT LARGE INTEGER DECIMAL') as query:
+        with query_fixture(
+            cursor, configuration, "SELECT LARGE INTEGER DECIMAL"
+        ) as query:
             cursor.execute(query)
             row = cursor.fetchone()
             assert row == [42]
@@ -113,7 +123,9 @@ def test_select_single_row_large_integer_decimal_as_64_bit_type(configuration, d
 @for_each_database
 def test_select_single_row_large_fractional_decimal_as_64_bit_type(configuration, dsn):
     with open_cursor(configuration, large_decimals_as_64_bit_types=True) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT LARGE FRACTIONAL DECIMAL') as query:
+        with query_fixture(
+            cursor, configuration, "SELECT LARGE FRACTIONAL DECIMAL"
+        ) as query:
             cursor.execute(query)
             row = cursor.fetchone()
             assert row == pytest.approx([3.14])
@@ -121,15 +133,15 @@ def test_select_single_row_large_fractional_decimal_as_64_bit_type(configuration
 
 @for_each_database
 def test_select_single_row_multiple_columns(configuration, dsn):
-    _test_single_row_result_set(configuration,
-                                "SELECT 40, 41, 42, 43",
-                                [40, 41, 42, 43])
+    _test_single_row_result_set(
+        configuration, "SELECT 40, 41, 42, 43", [40, 41, 42, 43]
+    )
 
 
 @for_each_database
 def test_fetchone(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT MULTIPLE INTEGERS') as query:
+        with query_fixture(cursor, configuration, "SELECT MULTIPLE INTEGERS") as query:
             cursor.execute(query)
             row = cursor.fetchone()
             assert row == [42]
@@ -145,7 +157,7 @@ def test_fetchone(dsn, configuration):
 @for_each_database
 def test_fetchall(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT MULTIPLE INTEGERS') as query:
+        with query_fixture(cursor, configuration, "SELECT MULTIPLE INTEGERS") as query:
             cursor.execute(query)
             rows = cursor.fetchall()
             assert len(rows) == 3
@@ -157,7 +169,7 @@ def test_fetchall(dsn, configuration):
 @for_each_database
 def test_fetchmany_with_default_arraysize(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT MULTIPLE INTEGERS') as query:
+        with query_fixture(cursor, configuration, "SELECT MULTIPLE INTEGERS") as query:
             cursor.execute(query)
             rows = cursor.fetchmany()
             assert len(rows) == 1
@@ -167,7 +179,7 @@ def test_fetchmany_with_default_arraysize(dsn, configuration):
 @for_each_database
 def test_fetchmany_with_arraysize_parameter(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT MULTIPLE INTEGERS') as query:
+        with query_fixture(cursor, configuration, "SELECT MULTIPLE INTEGERS") as query:
             cursor.execute(query)
             arraysize_parameter = 2
 
@@ -185,7 +197,7 @@ def test_fetchmany_with_arraysize_parameter(dsn, configuration):
 @for_each_database
 def test_fetchmany_with_global_arraysize(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT MULTIPLE INTEGERS') as query:
+        with query_fixture(cursor, configuration, "SELECT MULTIPLE INTEGERS") as query:
             cursor.execute(query)
 
             arraysize_parameter = 2
@@ -205,7 +217,7 @@ def test_fetchmany_with_global_arraysize(dsn, configuration):
 @for_each_database
 def test_fetchmany_with_bad_arraysize_parameter_raises(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT MULTIPLE INTEGERS') as query:
+        with query_fixture(cursor, configuration, "SELECT MULTIPLE INTEGERS") as query:
             cursor.execute(query)
 
             with pytest.raises(turbodbc.InterfaceError):
@@ -217,7 +229,7 @@ def test_fetchmany_with_bad_arraysize_parameter_raises(dsn, configuration):
 @for_each_database
 def test_fetchmany_with_bad_global_arraysize_raises(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'SELECT MULTIPLE INTEGERS') as query:
+        with query_fixture(cursor, configuration, "SELECT MULTIPLE INTEGERS") as query:
             cursor.execute(query)
 
             cursor.arraysize = -1
@@ -233,51 +245,69 @@ def test_fetchmany_with_bad_global_arraysize_raises(dsn, configuration):
 def test_number_of_rows_exceeds_buffer_size(dsn, configuration):
     buffer_size = 3
     with open_cursor(configuration, rows_to_buffer=buffer_size) as cursor:
-        with query_fixture(cursor, configuration, 'INSERT INTEGER') as table_name:
+        with query_fixture(cursor, configuration, "INSERT INTEGER") as table_name:
             numbers = buffer_size * 2 + 1
             for i in range(numbers):
-                cursor.execute("INSERT INTO {} VALUES ({})".format(table_name, i))
+                cursor.execute(f"INSERT INTO {table_name} VALUES ({i})")
 
-            cursor.execute("SELECT a FROM {}".format(table_name))
+            cursor.execute(f"SELECT a FROM {table_name}")
             retrieved = cursor.fetchall()
-            actual_sum = sum([row[0] for row in retrieved])
+            actual_sum = sum(row[0] for row in retrieved)
             expected_sum = sum(range(numbers))
             assert expected_sum == actual_sum
 
 
 @for_each_database
 def test_description(dsn, configuration):
-    capabilities = configuration['capabilities']
+    capabilities = configuration["capabilities"]
 
     with open_cursor(configuration) as cursor:
         assert None == cursor.description
 
         def fix_case(string):
-            if capabilities['reports_column_names_as_upper_case']:
+            if capabilities["reports_column_names_as_upper_case"]:
                 return string.upper()
             else:
                 return string
 
-        with query_fixture(cursor, configuration, 'DESCRIPTION') as table_name:
-            cursor.execute("SELECT * FROM {}".format(table_name))
+        with query_fixture(cursor, configuration, "DESCRIPTION") as table_name:
+            cursor.execute(f"SELECT * FROM {table_name}")
 
-            nullness_for_null_column = not capabilities['indicates_null_columns']
+            nullness_for_null_column = not capabilities["indicates_null_columns"]
 
-            expected = [(fix_case('as_int'), turbodbc.NUMBER, None, None, None, None, True),
-                        (fix_case('as_double'), turbodbc.NUMBER, None, None, None, None, True),
-                        (fix_case('as_varchar'), turbodbc.STRING, None, None, None, None, True),
-                        (fix_case('as_date'), turbodbc.DATETIME, None, None, None, None, True),
-                        (fix_case('as_timestamp'), turbodbc.DATETIME, None, None, None, None, True),
-                        (fix_case('as_int_not_null'), turbodbc.NUMBER, None, None, None, None, nullness_for_null_column)]
+            expected = [
+                (fix_case("as_int"), turbodbc.NUMBER, None, None, None, None, True),
+                (fix_case("as_double"), turbodbc.NUMBER, None, None, None, None, True),
+                (fix_case("as_varchar"), turbodbc.STRING, None, None, None, None, True),
+                (fix_case("as_date"), turbodbc.DATETIME, None, None, None, None, True),
+                (
+                    fix_case("as_timestamp"),
+                    turbodbc.DATETIME,
+                    None,
+                    None,
+                    None,
+                    None,
+                    True,
+                ),
+                (
+                    fix_case("as_int_not_null"),
+                    turbodbc.NUMBER,
+                    None,
+                    None,
+                    None,
+                    None,
+                    nullness_for_null_column,
+                ),
+            ]
             assert expected == cursor.description
 
 
 @for_each_database_except(["MySQL"])
 def test_unicode_column_names(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'UNICODE COLUMN NAME') as table_name:
-            cursor.execute("SELECT * FROM {}".format(table_name))
-            assert cursor.description[0][0] == u"I \u2665 Unicode"
+        with query_fixture(cursor, configuration, "UNICODE COLUMN NAME") as table_name:
+            cursor.execute(f"SELECT * FROM {table_name}")
+            assert cursor.description[0][0] == "I \u2665 Unicode"
 
 
 @for_one_database

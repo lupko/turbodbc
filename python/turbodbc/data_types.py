@@ -1,4 +1,4 @@
-class DataType(object):
+class DataType:
     def __init__(self, matched_type_codes):
         self._matched_type_codes = matched_type_codes
 
@@ -7,6 +7,7 @@ class DataType(object):
 
     def __ne__(self, other):
         return not (self == other)
+
 
 # Type codes according to underlying C++ library:
 _BOOLEAN_CODE = 0

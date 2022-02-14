@@ -1,17 +1,17 @@
 from weakref import WeakSet
 
-from .exceptions import translate_exceptions, InterfaceError
 from .cursor import Cursor
+from .exceptions import InterfaceError, translate_exceptions
 
 
-class Connection(object):
+class Connection:
     def _assert_valid(self):
         if self.impl is None:
             raise InterfaceError("Connection already closed")
 
     def __init__(self, impl):
         self.impl = impl
-        self.cursors = WeakSet([])
+        self.cursors: WeakSet = WeakSet([])
 
     @translate_exceptions
     def cursor(self):
@@ -48,7 +48,7 @@ class Connection(object):
         """
         for c in self.cursors:
             c.close()
-        self.cursors = []
+        self.cursors = WeakSet([])
         self.impl = None
 
     @property
@@ -63,7 +63,6 @@ class Connection(object):
     def autocommit(self, value):
         self.impl.set_autocommit(value)
 
-
     def __enter__(self):
         """
         Conformance to PEP-343
@@ -75,4 +74,3 @@ class Connection(object):
         Conformance to PEP-343
         """
         return self.close()
-

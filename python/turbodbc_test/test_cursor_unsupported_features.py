@@ -1,12 +1,12 @@
 import pytest
+from helpers import for_one_database, get_credentials
 
 from turbodbc import connect
-
-from helpers import for_one_database, get_credentials
 
 """
 Test optional features mentioned in PEP-249 "behave" as specified 
 """
+
 
 @for_one_database
 def test_callproc_unsupported(dsn, configuration):
