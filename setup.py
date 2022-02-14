@@ -5,6 +5,7 @@ import os.path
 import sys
 import sysconfig
 from glob import iglob
+from typing import List
 
 import setuptools.command.build_ext
 from setuptools import Distribution, Extension, setup
@@ -86,7 +87,7 @@ include_dirs = ["include/", _deferred_pybind11_include()]
 
 library_dirs = [_get_distutils_build_directory()]
 python_module_link_args = []
-base_library_link_args = []
+base_library_link_args: List[str] = []
 
 if sys.platform == "darwin":
     extra_compile_args.append("--std=c++11")
