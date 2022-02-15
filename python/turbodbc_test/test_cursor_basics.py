@@ -1,9 +1,8 @@
 import pytest
-
-from turbodbc import connect, InterfaceError, Error, DatabaseError
-
-from helpers import for_one_database, get_credentials, open_cursor, for_each_database
+from helpers import for_each_database, for_one_database, get_credentials, open_cursor
 from query_fixture import query_fixture
+
+from turbodbc import DatabaseError, Error, InterfaceError, connect
 
 
 @for_one_database
@@ -13,7 +12,7 @@ def test_new_cursor_properties(dsn, configuration):
 
     # https://www.python.org/dev/peps/pep-0249/#rowcount
     assert cursor.rowcount == -1
-    assert None == cursor.description
+    assert cursor.description is None
     assert cursor.arraysize == 1
 
 
@@ -81,16 +80,16 @@ def test_setoutputsize_does_not_raise(dsn, configuration):
     raising an exception is ok
     """
     cursor = connect(dsn, **get_credentials(configuration)).cursor()
-    cursor.setoutputsize(1000, 42) # with column
-    cursor.setoutputsize(1000, column=42) # with column
-    cursor.setoutputsize(1000) # without column
+    cursor.setoutputsize(1000, 42)  # with column
+    cursor.setoutputsize(1000, column=42)  # with column
+    cursor.setoutputsize(1000)  # without column
 
 
 @for_one_database
 def test_rowcount_is_reset_after_execute_raises(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'INSERT INTEGER') as table_name:
-            cursor.execute("INSERT INTO {} VALUES (?)".format(table_name), [42])
+        with query_fixture(cursor, configuration, "INSERT INTEGER") as table_name:
+            cursor.execute(f"INSERT INTO {table_name} VALUES (?)", [42])
             assert cursor.rowcount == 1
             with pytest.raises(Error):
                 cursor.execute("this is not even a valid SQL statement")
@@ -100,8 +99,8 @@ def test_rowcount_is_reset_after_execute_raises(dsn, configuration):
 @for_one_database
 def test_rowcount_is_reset_after_executemany_raises(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'INSERT INTEGER') as table_name:
-            cursor.execute("INSERT INTO {} VALUES (?)".format(table_name), [42])
+        with query_fixture(cursor, configuration, "INSERT INTEGER") as table_name:
+            cursor.execute(f"INSERT INTO {table_name} VALUES (?)", [42])
             assert cursor.rowcount == 1
             with pytest.raises(Error):
                 cursor.executemany("this is not even a valid SQL statement")
@@ -111,8 +110,8 @@ def test_rowcount_is_reset_after_executemany_raises(dsn, configuration):
 @for_one_database
 def test_rowcount_is_reset_after_executemanycolumns_raises(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'INSERT INTEGER') as table_name:
-            cursor.execute("INSERT INTO {} VALUES (?)".format(table_name), [42])
+        with query_fixture(cursor, configuration, "INSERT INTEGER") as table_name:
+            cursor.execute(f"INSERT INTO {table_name} VALUES (?)", [42])
             assert cursor.rowcount == 1
             with pytest.raises(Error):
                 cursor.executemanycolumns("this is not even a valid SQL statement", [])
@@ -124,6 +123,7 @@ def test_connection_does_not_strongly_reference_cursors(dsn, configuration):
     connection = connect(dsn, **get_credentials(configuration))
     cursor = connection.cursor()
     import sys
+
     assert sys.getrefcount(cursor) == 2
 
 
@@ -141,9 +141,11 @@ def test_pep343_with_statement(dsn, configuration):
 @for_each_database
 def test_insert_duplicate_uniquecol_raises(dsn, configuration):
     with open_cursor(configuration) as cursor:
-        with query_fixture(cursor, configuration, 'INSERT DUPLICATE UNIQUECOL') as table_name:
-            with pytest.raises(DatabaseError) as ex:
-                cursor.execute("INSERT INTO {table_name} VALUES (1)".format(table_name=table_name))
+        with query_fixture(
+            cursor, configuration, "INSERT DUPLICATE UNIQUECOL"
+        ) as table_name:
+            with pytest.raises(DatabaseError):
+                cursor.execute(f"INSERT INTO {table_name} VALUES (1)")
                 # some databases (e.g. exasol) report failure not in the execute statement above, but only
                 # when closing the odbc handle, i.e. at cursor.close:
                 cursor.close()

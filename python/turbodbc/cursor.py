@@ -1,37 +1,45 @@
-from itertools import islice
 from collections import OrderedDict
+from itertools import islice
+from typing import Any, cast
 
-from turbodbc_intern import make_row_based_result_set, make_parameter_set
+from turbodbc_intern import make_parameter_set, make_row_based_result_set
 
-from .exceptions import translate_exceptions, InterfaceError, Error
+from .exceptions import Error, InterfaceError, translate_exceptions
+
+_NO_NUMPY_SUPPORT_MSG = (
+    "This installation of turbodbc does not support NumPy extensions. "
+    "Please install the `numpy` package. If you have built turbodbc from source, "
+    "you may also need to reinstall turbodbc to compile the extensions."
+)
+_NO_ARROW_SUPPORT_MSG = (
+    "This installation of turbodbc does not support Apache Arrow extensions. "
+    "Please install the `pyarrow` package. If you have built turbodbc from source, "
+    "you may also need to reinstall turbodbc to compile the extensions."
+)
 
 
-_NO_NUMPY_SUPPORT_MSG = "This installation of turbodbc does not support NumPy extensions. " \
-                        "Please install the `numpy` package. If you have built turbodbc from source, " \
-                        "you may also need to reinstall turbodbc to compile the extensions."
-_NO_ARROW_SUPPORT_MSG = "This installation of turbodbc does not support Apache Arrow extensions. " \
-                        "Please install the `pyarrow` package. If you have built turbodbc from source, " \
-                        "you may also need to reinstall turbodbc to compile the extensions."
-
-def _has_numpy_support():
+def _has_numpy_support() -> bool:
     try:
-        import turbodbc_numpy_support
+        import turbodbc_numpy_support  # noqa: F401
+
         return True
     except ImportError:
         return False
 
 
-def _has_arrow_support():
+def _has_arrow_support() -> bool:
     try:
-        import turbodbc_arrow_support
+        import turbodbc_arrow_support  # noqa: F401
+
         return True
     except ImportError:
         return False
 
 
 def _make_masked_arrays(result_batch):
-    from numpy.ma import MaskedArray
     from numpy import object_
+    from numpy.ma import MaskedArray
+
     masked_arrays = []
     for data, mask in result_batch:
         if isinstance(data, list):
@@ -42,28 +50,38 @@ def _make_masked_arrays(result_batch):
 
 
 def _assert_numpy_column_preconditions(columns):
-    from numpy.ma import MaskedArray
     from numpy import ndarray
+    from numpy.ma import MaskedArray
+
     n_columns = len(columns)
     for index, column in enumerate(columns, start=1):
         if type(column) not in [MaskedArray, ndarray]:
-            raise InterfaceError("Bad type for column {} of {}. Only numpy.ndarray and numpy.ma.MaskedArrays are supported".format(index, n_columns))
+            raise InterfaceError(
+                "Bad type for column {} of {}. Only numpy.ndarray and numpy.ma.MaskedArrays are supported".format(
+                    index, n_columns
+                )
+            )
         if column.ndim != 1:
-            raise InterfaceError("Column {} of {} is not one-dimensional".format(index, n_columns))
+            raise InterfaceError(
+                f"Column {index} of {n_columns} is not one-dimensional"
+            )
         if not column.flags.c_contiguous:
-            raise InterfaceError("Column {} of {} is not contiguous".format(index, n_columns))
+            raise InterfaceError(f"Column {index} of {n_columns} is not contiguous")
 
     lengths = [len(column) for column in columns]
-    all_same_length = all(l == lengths[0] for l in lengths)
+    all_same_length = all(length == lengths[0] for length in lengths)
     if not all_same_length:
-        raise InterfaceError("All columns must have the same length, got lengths {}".format(lengths))
+        raise InterfaceError(
+            f"All columns must have the same length, got lengths {lengths}"
+        )
 
 
-class Cursor(object):
+class Cursor:
     """
     This class allows you to send SQL commands and queries to a database and retrieve
     associated result sets.
     """
+
     def __init__(self, impl):
         self.impl = impl
         self.result_set = None
@@ -100,7 +118,10 @@ class Cursor(object):
         """
         if self.result_set:
             info = self.result_set.get_column_info()
-            return [(c.name, c.type_code(), None, None, None, None, c.supports_null_values) for c in info]
+            return [
+                (c.name, c.type_code(), None, None, None, None, c.supports_null_values)
+                for c in info
+            ]
         else:
             return None
 
@@ -163,7 +184,7 @@ class Cursor(object):
         return self._execute()
 
     @translate_exceptions
-    def executemanycolumns(self, sql, columns):
+    def executemanycolumns(self, sql: str, columns):
         """
         Execute an SQL command or query with multiple parameter sets that are passed in
         a column-wise fashion as opposed to the row-wise parameters in ``executemany()``.
@@ -192,15 +213,16 @@ class Cursor(object):
 
                 for column in columns.itercolumns():
                     if _num_chunks(column) != 1:
-                        raise NotImplementedError("Chunked Arrays are "
-                                                  "not yet supported")
+                        raise NotImplementedError(
+                            "Chunked Arrays are " "not yet supported"
+                        )
 
                 set_arrow_parameters(self.impl, columns)
                 return self._execute()
 
         # Workaround to give users a better error message without a need
         # to import pyarrow
-        if columns.__class__.__module__.startswith('pyarrow'):
+        if columns.__class__.__module__.startswith("pyarrow"):
             raise Error(_NO_ARROW_SUPPORT_MSG)
 
         if not _has_numpy_support():
@@ -208,9 +230,9 @@ class Cursor(object):
 
         _assert_numpy_column_preconditions(columns)
 
-
         from numpy.ma import MaskedArray
         from turbodbc_numpy_support import set_numpy_parameters
+
         split_arrays = []
         for column in columns:
             if isinstance(column, MaskedArray):
@@ -230,7 +252,7 @@ class Cursor(object):
         :return: Returns ``None`` when no more rows are available in the result set
         """
         self._assert_valid_result_set()
-        result = self.result_set.fetch_row()
+        result = cast(Any, self.result_set).fetch_row()
         if len(result) == 0:
             return None
         else:
@@ -258,8 +280,8 @@ class Cursor(object):
         """
         if size is None:
             size = self.arraysize
-        if (size <= 0):
-            raise InterfaceError("Invalid arraysize {} for fetchmany()".format(size))
+        if size <= 0:
+            raise InterfaceError(f"Invalid arraysize {size} for fetchmany()")
 
         return [row for row in islice(self, size)]
 
@@ -274,9 +296,12 @@ class Cursor(object):
                  chosen automatically.
         """
         from numpy.ma import concatenate
+
         batches = list(self._numpy_batch_generator())
         column_names = [description[0] for description in self.description]
-        return OrderedDict(zip(column_names, [concatenate(column) for column in zip(*batches)]))
+        return OrderedDict(
+            zip(column_names, [concatenate(column) for column in zip(*batches)])
+        )
 
     def fetchnumpybatches(self):
         """
@@ -298,13 +323,14 @@ class Cursor(object):
             raise Error(_NO_NUMPY_SUPPORT_MSG)
 
         from turbodbc_numpy_support import make_numpy_result_set
+
         numpy_result_set = make_numpy_result_set(self.impl.get_result_set())
         first_run = True
         while True:
             result_batch = _make_masked_arrays(numpy_result_set.fetch_next_batch())
-            is_empty_batch = (len(result_batch[0]) == 0)
+            is_empty_batch = len(result_batch[0]) == 0
             if is_empty_batch and not first_run:
-                return # Let us return a typed result set at least once
+                return  # Let us return a typed result set at least once
             first_run = False
             yield result_batch
 
@@ -327,16 +353,16 @@ class Cursor(object):
         self._assert_valid_result_set()
         if _has_arrow_support():
             from turbodbc_arrow_support import make_arrow_result_set
+
             rs = make_arrow_result_set(
-                self.impl.get_result_set(),
-                strings_as_dictionary,
-                adaptive_integers)
+                self.impl.get_result_set(), strings_as_dictionary, adaptive_integers
+            )
             first_run = True
             while True:
                 table = rs.fetch_next_batch()
-                is_empty_batch = (len(table) == 0)
+                is_empty_batch = len(table) == 0
                 if is_empty_batch and not first_run:
-                    return # Let us return a typed result set at least once
+                    return  # Let us return a typed result set at least once
                 first_run = False
                 yield table
         else:
@@ -361,10 +387,10 @@ class Cursor(object):
         self._assert_valid_result_set()
         if _has_arrow_support():
             from turbodbc_arrow_support import make_arrow_result_set
+
             return make_arrow_result_set(
-                    self.impl.get_result_set(),
-                    strings_as_dictionary,
-                    adaptive_integers).fetch_all()
+                self.impl.get_result_set(), strings_as_dictionary, adaptive_integers
+            ).fetch_all()
         else:
             raise Error(_NO_ARROW_SUPPORT_MSG)
 

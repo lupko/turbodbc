@@ -1,18 +1,26 @@
+from typing import Optional
+
 from turbodbc_intern import connect as intern_connect
 
-from .exceptions import translate_exceptions, ParameterError
 from .connection import Connection
+from .exceptions import ParameterError, translate_exceptions
 from .options import make_options
 
-def _make_connection_string(dsn, **kwargs):
+
+def _make_connection_string(dsn: Optional[str], **kwargs) -> str:
     if dsn:
-        kwargs['dsn'] = dsn
-    return ';'.join(["{}={}".format(key, value) for key, value in kwargs.items()])
+        kwargs["dsn"] = dsn
+    return ";".join([f"{key}={value}" for key, value in kwargs.items()])
 
 
 @translate_exceptions
-def connect(dsn=None, turbodbc_options=None, connection_string=None, **kwargs):
-    """
+def connect(
+    dsn: Optional[str] = None,
+    turbodbc_options=None,
+    connection_string: Optional[str] = None,
+    **kwargs,
+) -> Connection:
+    r"""
     Create a connection with the database identified by the ``dsn`` or the ``connection_string``.
 
     :param dsn: Data source name as given in the (unix) odbc.ini file
@@ -35,7 +43,6 @@ def connect(dsn=None, turbodbc_options=None, connection_string=None, **kwargs):
     if connection_string is None:
         connection_string = _make_connection_string(dsn, **kwargs)
 
-    connection = Connection(intern_connect(connection_string,
-                                           turbodbc_options))
+    connection = Connection(intern_connect(connection_string, turbodbc_options))
 
     return connection

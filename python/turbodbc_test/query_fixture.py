@@ -1,10 +1,10 @@
-from contextlib import contextmanager
-
 import random
+from contextlib import contextmanager
 
 
 def unique_table_name():
-    return 'test_{}'.format(random.randint(0, 1000000000))
+    return f"test_{random.randint(0, 1000000000)}"
+
 
 @contextmanager
 def query_fixture(cursor, configuration, fixture_key):
@@ -13,7 +13,7 @@ def query_fixture(cursor, configuration, fixture_key):
     :param cursor: This cursor is used to execute queries
     :param configuration: A dictionary containing configuration and fixtures
     :param fixture_key: Identifies the fixture
-    
+
     The context manager performs the following tasks:
     * If present, create a table or view based on what is written in the
       fixture's "table" or "view" key
@@ -21,9 +21,9 @@ def query_fixture(cursor, configuration, fixture_key):
     * If present, return the query listed in the fixture's "payload" section;
       else return the name of a temporary table
     * Clean up any tables or views created
-    
+
     The fixtures dictionary should have the following format:
-    
+
     {
         "setup": {
             "view": {
@@ -48,13 +48,13 @@ def query_fixture(cursor, configuration, fixture_key):
 
         }
     }
-    
+
     All sections are optional. Queries may contain
     "{table_name}" to be replaced with a random table (or view) name.
     """
-    fixture = configuration['queries'][fixture_key]
+    fixture = configuration["queries"][fixture_key]
     table_name = unique_table_name()
-    
+
     def _execute_queries(queries, replacements):
         if not isinstance(queries, list):
             queries = [queries]
@@ -63,37 +63,35 @@ def query_fixture(cursor, configuration, fixture_key):
             try:
                 cursor.execute(query.format(**replacements))
             except Exception as error:
-                raise type(error)('Error executing query "{}": {}'.format(query, error))
+                raise type(error)(f'Error executing query "{query}": {error}')
 
     def create_objects():
-        if 'view' in fixture:
-            queries = configuration['setup']['view']['create']
-            replacements = {'table_name': table_name,
-                            'content': fixture['view']}
+        if "view" in fixture:
+            queries = configuration["setup"]["view"]["create"]
+            replacements = {"table_name": table_name, "content": fixture["view"]}
             _execute_queries(queries, replacements)
-        if 'table' in fixture:
-            queries = configuration['setup']['table']['create']
-            replacements = {'table_name': table_name,
-                            'content': fixture['table']}
+        if "table" in fixture:
+            queries = configuration["setup"]["table"]["create"]
+            replacements = {"table_name": table_name, "content": fixture["table"]}
             _execute_queries(queries, replacements)
 
     def drop_objects():
-        if 'view' in fixture:
-            queries = configuration['setup']['view']['drop']
-            replacements = {'table_name': table_name}
+        if "view" in fixture:
+            queries = configuration["setup"]["view"]["drop"]
+            replacements = {"table_name": table_name}
             _execute_queries(queries, replacements)
-        if 'table' in fixture:
-            queries = configuration['setup']['table']['drop']
-            replacements = {'table_name': table_name}
+        if "table" in fixture:
+            queries = configuration["setup"]["table"]["drop"]
+            replacements = {"table_name": table_name}
             _execute_queries(queries, replacements)
 
     create_objects()
     try:
-        if 'setup' in fixture:
-            replacements = {'table_name': table_name}
-            _execute_queries(fixture['setup'], replacements)
-        if 'payload' in fixture:
-            yield fixture['payload'].format(table_name=table_name)
+        if "setup" in fixture:
+            replacements = {"table_name": table_name}
+            _execute_queries(fixture["setup"], replacements)
+        if "payload" in fixture:
+            yield fixture["payload"].format(table_name=table_name)
         else:
             yield table_name
     finally:

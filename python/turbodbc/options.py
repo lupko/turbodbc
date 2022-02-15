@@ -1,15 +1,18 @@
 from turbodbc_intern import Options
 
-def make_options(read_buffer_size=None,
-                 parameter_sets_to_buffer=None,
-                 varchar_max_character_limit=None,
-                 prefer_unicode=None,
-                 use_async_io=None,
-                 autocommit=None,
-                 large_decimals_as_64_bit_types=None,
-                 limit_varchar_results_to_max=None,
-                 force_extra_capacity_for_unicode=None,
-                 fetch_wchar_as_char=None):
+
+def make_options(
+    read_buffer_size=None,
+    parameter_sets_to_buffer=None,
+    varchar_max_character_limit=None,
+    prefer_unicode=None,
+    use_async_io=None,
+    autocommit=None,
+    large_decimals_as_64_bit_types=None,
+    limit_varchar_results_to_max=None,
+    force_extra_capacity_for_unicode=None,
+    fetch_wchar_as_char=None,
+):
     """
     Create options that control how turbodbc interacts with a database. These
     options affect performance for the most part, but some options may require adjustment
@@ -71,34 +74,34 @@ def make_options(read_buffer_size=None,
     """
     options = Options()
 
-    if not read_buffer_size is None:
+    if read_buffer_size is not None:
         options.read_buffer_size = read_buffer_size
 
-    if not parameter_sets_to_buffer is None:
+    if parameter_sets_to_buffer is not None:
         options.parameter_sets_to_buffer = parameter_sets_to_buffer
 
-    if not varchar_max_character_limit is None:
+    if varchar_max_character_limit is not None:
         options.varchar_max_character_limit = varchar_max_character_limit
 
-    if not prefer_unicode is None:
+    if prefer_unicode is not None:
         options.prefer_unicode = prefer_unicode
 
-    if not use_async_io is None:
+    if use_async_io is not None:
         options.use_async_io = use_async_io
 
-    if not autocommit is None:
+    if autocommit is not None:
         options.autocommit = autocommit
 
-    if not large_decimals_as_64_bit_types is None:
+    if large_decimals_as_64_bit_types is not None:
         options.large_decimals_as_64_bit_types = large_decimals_as_64_bit_types
 
-    if not limit_varchar_results_to_max is None:
+    if limit_varchar_results_to_max is not None:
         options.limit_varchar_results_to_max = limit_varchar_results_to_max
 
-    if not force_extra_capacity_for_unicode is None:
+    if force_extra_capacity_for_unicode is not None:
         options.force_extra_capacity_for_unicode = force_extra_capacity_for_unicode
 
-    if not fetch_wchar_as_char is None:
+    if fetch_wchar_as_char is not None:
         options.fetch_wchar_as_char = fetch_wchar_as_char
 
     return options

@@ -11,11 +11,28 @@ on:
     - cron: '47 6 * * *'
 
 jobs:
+  pre-commit-checks:
+    name: "Lint using pre-commit"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2.4.0
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Install Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Run pre-commit checks
+        uses: pre-commit/action@v2.0.3
+
   tests:
     runs-on: ubuntu-latest
     env:
       FORCE_COLOR: 1
     strategy:
+      fail-fast: false
       matrix:
         target:
           - +test-python3.8-arrow1.x.x

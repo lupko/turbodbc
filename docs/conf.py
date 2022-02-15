@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # turbodbc documentation build configuration file, created by
 # sphinx-quickstart on Sun Apr  9 09:48:15 2017.
@@ -8,9 +7,11 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import sphinx_rtd_theme
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join('..', 'python')))
+
+import sphinx_rtd_theme
+
+sys.path.insert(0, os.path.abspath(os.path.join("..", "python")))
 
 
 # -- General configuration ------------------------------------------------
@@ -19,24 +20,24 @@ sys.path.insert(0, os.path.abspath(os.path.join('..', 'python')))
 #
 # needs_sphinx = '1.0'
 
-extensions = ['sphinx.ext.autodoc']
+extensions = ["sphinx.ext.autodoc"]
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
-source_suffix = '.rst'
+source_suffix = ".rst"
 
-master_doc = 'index'
+master_doc = "index"
 
-project = u'turbodbc'
-copyright = u'2017, Michael König'
-author = u'Michael König'
+project = "turbodbc"
+copyright = "2017, Michael König"
+author = "Michael König"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = os.environ.get('READTHEDOCS_VERSION', 'latest')
+version = os.environ.get("READTHEDOCS_VERSION", "latest")
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -50,10 +51,10 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
@@ -64,14 +65,16 @@ todo_include_todos = False
 try:
     from unittest.mock import MagicMock
 except ImportError:
-    from mock import MagicMock
+    from unittest.mock import MagicMock
+
 
 class Mock(MagicMock):
     @classmethod
     def __getattr__(cls, name):
         return MagicMock()
 
-MOCK_MODULES = ['turbodbc_intern']
+
+MOCK_MODULES = ["turbodbc_intern"]
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 
@@ -80,7 +83,7 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -91,30 +94,27 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'turbodbcdoc'
+htmlhelp_basename = "turbodbcdoc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
+latex_elements = {  # type: ignore
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     #
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     #
     # 'preamble': '',
-
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
@@ -124,8 +124,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'turbodbc.tex', u'turbodbc Documentation',
-     u'Michael König', 'manual'),
+    (master_doc, "turbodbc.tex", "turbodbc Documentation", "Michael König", "manual"),
 ]
 
 
@@ -133,10 +132,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'turbodbc', u'turbodbc Documentation',
-     [author], 1)
-]
+man_pages = [(master_doc, "turbodbc", "turbodbc Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -145,10 +141,13 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'turbodbc', u'turbodbc Documentation',
-     author, 'turbodbc', 'One line description of project.',
-     'Miscellaneous'),
+    (
+        master_doc,
+        "turbodbc",
+        "turbodbc Documentation",
+        author,
+        "turbodbc",
+        "One line description of project.",
+        "Miscellaneous",
+    ),
 ]
-
-
-
