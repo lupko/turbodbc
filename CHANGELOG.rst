@@ -3,6 +3,12 @@ Version history / changelog
 
 From version 2.0.0, turbodbc adapts semantic versioning.
 
+Version 4.5.0
+-------------
+
+* Require ``pyarrow``, ``oldest-supported-numpy``, ``pybind11`` as ``setup_requires``
+* Create ``pyarrow`` symlinks if ``pyarrow`` is available
+
 Version 4.4.0
 -------------
 

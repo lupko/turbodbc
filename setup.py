@@ -193,6 +193,9 @@ def get_extension_modules():
     if _has_arrow_headers():
         import pyarrow
 
+        # Make default named pyarrow shared libs available.
+        pyarrow.create_library_symlinks()
+
         pyarrow_location = os.path.dirname(pyarrow.__file__)
         # For now, assume that we build against bundled pyarrow releases.
         pyarrow_include_dir = os.path.join(pyarrow_location, "include")
@@ -234,8 +237,15 @@ setup(
     author="Michael Koenig",
     author_email="michael.koenig@blue-yonder.com",
     packages=["turbodbc"],
-    python_requires=">=3.8",
+    setup_requires=[
+        "setuptools_scm",
+        "pybind11>=2.2.0",
+        "pyarrow>=1,<7.1.0",
+        "oldest-supported-numpy",
+    ],
+    install_requires=[],
     extras_require={"arrow": ["pyarrow>=1.0,<7.1.0"], "numpy": "numpy>=1.19.0"},
+    python_requires=">=3.8",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -251,5 +261,4 @@ setup(
         "Topic :: Database",
     ],
     ext_modules=get_extension_modules(),
-    install_requires=["pybind11>=2.2.0"],
 )
