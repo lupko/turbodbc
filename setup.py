@@ -238,10 +238,9 @@ setup(
     author_email="michael.koenig@blue-yonder.com",
     packages=["turbodbc"],
     setup_requires=[
-        "setuptools_scm",
         "pybind11>=2.2.0",
         "pyarrow>=1,<7.1.0",
-        "oldest-supported-numpy",
+        "numpy>=1.18",
     ],
     install_requires=[],
     extras_require={"arrow": ["pyarrow>=1.0,<7.1.0"], "numpy": "numpy>=1.19.0"},

@@ -3,6 +3,12 @@ Version history / changelog
 
 From version 2.0.0, turbodbc adapts semantic versioning.
 
+Version 4.5.2
+-------------
+
+* ``oldest-supported-numpy`` is only for ``pyproject.toml``, thus we removed it from
+  ``setup_requires`` again.
+
 Version 4.5.1
 -------------
 

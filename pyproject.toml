@@ -1,5 +1,5 @@
 [build-system]
-requires = ['setuptools', 'setuptools-scm', 'wheel', 'pyarrow>=1', 'pybind11', 'oldest-supported-numpy']
+requires = ['setuptools', 'wheel', 'pyarrow>=1', 'pybind11', 'oldest-supported-numpy']
 
 [tool.black]
 exclude = '''
