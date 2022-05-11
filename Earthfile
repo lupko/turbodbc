@@ -44,7 +44,7 @@ python:
         ninja \
         cmake \
         coveralls \
-        gmock \
+        gmock=1.10.0 \
         gtest \
         cxx-compiler \
         mock \
