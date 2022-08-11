@@ -3,12 +3,21 @@ import itertools
 import os
 import os.path
 import sys
-import sysconfig
 from glob import iglob
 from typing import List
 
 import setuptools.command.build_ext
 from setuptools import Distribution, Extension, setup
+from setuptools.command.build_ext import build_ext
+
+
+class TurbodbcExtensionBuilder(build_ext):
+    def run(self) -> None:
+        super().run()
+
+    def build_extension(self, extension: setuptools.extension.Extension) -> None:
+        extension.library_dirs.append(self.build_lib)  # type: ignore
+        super().build_extension(extension)
 
 
 def _get_turbodbc_libname():
@@ -17,23 +26,6 @@ def _get_turbodbc_libname():
     without_lib = full_name.split("lib", 1)[-1]
     without_so = without_lib.rsplit(".so", 1)[0]
     return without_so
-
-
-def _get_distutils_build_directory():
-    """
-    Returns the directory distutils uses to build its files.
-    We need this directory since we build extensions which have to link
-    other ones.
-    """
-    pattern = "lib.{platform}-{major}.{minor}"
-    return os.path.join(
-        "build",
-        pattern.format(
-            platform=sysconfig.get_platform(),
-            major=sys.version_info[0],
-            minor=sys.version_info[1],
-        ),
-    )
 
 
 def _get_source_files(directory):
@@ -85,7 +77,7 @@ extra_compile_args = []
 hidden_visibility_args = []
 include_dirs = ["include/", _deferred_pybind11_include()]
 
-library_dirs = [_get_distutils_build_directory()]
+library_dirs = []
 python_module_link_args = []
 base_library_link_args: List[str] = []
 
@@ -225,7 +217,6 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, "README.md")) as f:
     long_description = f.read()
 
-
 setup(
     name="turbodbc",
     version="4.5.4",
@@ -259,5 +250,6 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython",
         "Topic :: Database",
     ],
+    cmdclass=dict(build_ext=TurbodbcExtensionBuilder),
     ext_modules=get_extension_modules(),
 )
