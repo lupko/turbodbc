@@ -17,15 +17,13 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v2.4.0
-        with:
-          ref: ${{ github.head_ref }}
+        uses: actions/checkout@v3
       - name: Install Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Run pre-commit checks
-        uses: pre-commit/action@v2.0.3
+        uses: pre-commit/action@v3.0.0
 
   tests:
     runs-on: ubuntu-latest
@@ -42,6 +40,7 @@ jobs:
           - +test-python3.8-arrow5.x.x
           - +test-python3.8-arrow6.x.x
           - +test-python3.8-arrow7.x.x
+          - +test-python3.8-arrow8.x.x
           - +test-python3.9-arrow1.x.x
           - +test-python3.9-arrow2.x.x
           - +test-python3.9-arrow3.x.x
@@ -49,6 +48,7 @@ jobs:
           - +test-python3.9-arrow5.x.x
           - +test-python3.9-arrow6.x.x
           - +test-python3.9-arrow7.x.x
+          - +test-python3.9-arrow8.x.x
           - +test-python3.10-arrow1.x.x
           - +test-python3.10-arrow2.x.x
           - +test-python3.10-arrow3.x.x
@@ -56,16 +56,17 @@ jobs:
           - +test-python3.10-arrow5.x.x
           - +test-python3.10-arrow6.x.x
           - +test-python3.10-arrow7.x.x
+          - +test-python3.10-arrow8.x.x
         experimental: [ false ]
         upload: [ false ]
         include:
-          - target: +test-python3.8-arrow7.x.x
+          - target: +test-python3.8-arrow8.x.x
             experimental: false
             upload: true
-          - target: +test-python3.9-arrow7.x.x
+          - target: +test-python3.9-arrow8.x.x
             experimental: false
             upload: true
-          - target: +test-python3.10-arrow7.x.x
+          - target: +test-python3.10-arrow8.x.x
             experimental: false
             upload: true
           - target: +test-python3.8-arrow-nightly

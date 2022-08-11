@@ -22,6 +22,7 @@ os-base:
         wget -q https://packages.microsoft.com/config/debian/9/prod.list -O- > /etc/apt/sources.list.d/mssql-release.list && \
         apt-get update && \
         ACCEPT_EULA=Y apt-get install msodbcsql17 mssql-tools && \
+	ls -l  /opt/microsoft/msodbcsql17/lib64/ && \
         odbcinst -i -d -f /opt/microsoft/msodbcsql17/etc/odbcinst.ini
 
     # not used for the moment as Exasol is not tested here
@@ -44,7 +45,7 @@ python:
         ninja \
         cmake \
         coveralls \
-        gmock \
+        gmock=1.10.0 \
         gtest \
         cxx-compiler \
         mock \
@@ -184,11 +185,19 @@ test-python3.8-arrow6.x.x:
 
     SAVE ARTIFACT /result AS LOCAL result
 
-
 test-python3.8-arrow7.x.x:
     ARG PYTHON_VERSION="3.8.12"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
         --build-arg ARROW_VERSION_RULE=">=7,<8" \
+        --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.8-arrow8.x.x:
+    ARG PYTHON_VERSION="3.8.12"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=8,<9" \
         --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
         +test/result /result
 
@@ -257,11 +266,19 @@ test-python3.9-arrow6.x.x:
 
     SAVE ARTIFACT /result AS LOCAL result
 
-
 test-python3.9-arrow7.x.x:
     ARG PYTHON_VERSION="3.9.10"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
         --build-arg ARROW_VERSION_RULE=">=7,<8" \
+        --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.9-arrow8.x.x:
+    ARG PYTHON_VERSION="3.9.10"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=8,<9" \
         --build-arg NUMPY_VERSION_RULE=">=1.20.0" \
         +test/result /result
 
@@ -330,11 +347,19 @@ test-python3.10-arrow6.x.x:
 
     SAVE ARTIFACT /result AS LOCAL result
 
-
 test-python3.10-arrow7.x.x:
     ARG PYTHON_VERSION="3.10.2"
     COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
         --build-arg ARROW_VERSION_RULE=">=7,<8" \
+        --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
+        +test/result /result
+
+    SAVE ARTIFACT /result AS LOCAL result
+
+test-python3.10-arrow8.x.x:
+    ARG PYTHON_VERSION="3.10.2"
+    COPY --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+        --build-arg ARROW_VERSION_RULE=">=8,<9" \
         --build-arg NUMPY_VERSION_RULE=">=1.21.2" \
         +test/result /result
 
@@ -357,6 +382,7 @@ test-python3.8-all:
     BUILD test-python3.8-arrow5.x.x
     BUILD test-python3.8-arrow6.x.x
     BUILD test-python3.8-arrow7.x.x
+    BUILD test-python3.8-arrow8.x.x
     BUILD test-python3.8-arrow-nightly
 
 test-python3.9-all:
@@ -367,6 +393,7 @@ test-python3.9-all:
     BUILD test-python3.9-arrow5.x.x
     BUILD test-python3.9-arrow6.x.x
     BUILD test-python3.9-arrow7.x.x
+    BUILD test-python3.9-arrow8.x.x
     BUILD test-python3.9-arrow-nightly
     
 test-python3.10-all:
@@ -377,6 +404,7 @@ test-python3.10-all:
     BUILD test-python3.10-arrow5.x.x
     BUILD test-python3.10-arrow6.x.x
     BUILD test-python3.10-arrow7.x.x
+    BUILD test-python3.10-arrow8.x.x
     BUILD test-python3.10-arrow-nightly
 
 test-all:
