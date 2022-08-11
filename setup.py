@@ -7,8 +7,8 @@ from glob import iglob
 from typing import List
 
 import setuptools.command.build_ext
-from setuptools.command.build_ext import build_ext
 from setuptools import Distribution, Extension, setup
+from setuptools.command.build_ext import build_ext
 
 
 class TurbodbcExtensionBuilder(build_ext):
@@ -16,7 +16,7 @@ class TurbodbcExtensionBuilder(build_ext):
         super().run()
 
     def build_extension(self, extension: setuptools.extension.Extension) -> None:
-        extension.library_dirs.append(self.build_lib)
+        extension.library_dirs.append(self.build_lib)  # type: ignore
         super().build_extension(extension)
 
 
